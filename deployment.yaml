@@ -1,12 +1,33 @@
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: nginx
-  labels:
-    app: nginx
+  name: harness-example-svc
 spec:
-  containers:
-  - name: nginx-container
-    image: nginx:latest
-    ports:
-      - containerPort: 80
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: harness-example
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harness-example-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: harness-example
+  template:
+    metadata:
+      labels:
+        app: harness-example
+    spec:
+      imagePullSecrets:
+      - name: harness-example-dockercfg
+      containers:
+      - name: harness-example
+        imagePullPolicy: Always
+        image: index.docker.io/tkouhsari/harness:0.2
