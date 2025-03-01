@@ -16,7 +16,7 @@ kind: Deployment
 metadata:
   name: harness-example-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: harness-example
